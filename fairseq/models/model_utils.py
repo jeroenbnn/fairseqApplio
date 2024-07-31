@@ -47,9 +47,9 @@ def expand_2d_or_3d_tensor(x, trg_dim: int, padding_idx: int):
         return x
 
     dims = [x.size(0), trg_dim - x.size(1)]
-    if x.dim() == 3:
-        dims.append(x.size(2))
-    x = torch.cat([x, torch.zeros(dims).to(x).fill_(padding_idx)], 1)
+    #if x.dim() == 3:
+    #    dims.append(x.size(2))
+    # x = torch.cat([x, torch.zeros(dims).to(x).fill_(padding_idx)], 1)
 
     return x
 
@@ -81,12 +81,12 @@ def fill_tensors(
     if x.size(1) < y.size(1):
         x = expand_2d_or_3d_tensor(x, y.size(1), padding_idx)
         x[mask] = y
-    elif x.size(1) > y.size(1):
-        x[mask] = torch.tensor(padding_idx).type_as(x)
-        if x.dim() == 2:
-            x[mask, : y.size(1)] = y
-        else:
-            x[mask, : y.size(1), :] = y
+    # elif x.size(1) > y.size(1):
+    #     x[mask] = torch.tensor(padding_idx).type_as(x)
+    #     if x.dim() == 2:
+    #         x[mask, : y.size(1)] = y
+    #     else:
+    #         x[mask, : y.size(1), :] = y
     else:
         x[mask] = y
     return x
