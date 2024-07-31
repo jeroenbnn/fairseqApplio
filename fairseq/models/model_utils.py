@@ -1,3 +1,4 @@
+@@ -0,0 +1,92 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
 #
 # This source code is licensed under the MIT license found in the
@@ -33,8 +34,8 @@ def script_skip_tensor(x: Tensor, mask):
         return res
 
 
-@torch.jit.script
-def expand_2d_or_3d_tensor(x, trg_dim: int, padding_idx: int):
+@torch.jit.ignore
+def expand_2d_or_3d_tensor(x: Tensor, trg_dim: int, padding_idx: int):
     """
     Expand 2D/3D tensor on dim=1
     """
@@ -47,9 +48,9 @@ def expand_2d_or_3d_tensor(x, trg_dim: int, padding_idx: int):
         return x
 
     dims = [x.size(0), trg_dim - x.size(1)]
-    #if x.dim() == 3:
-    #    dims.append(x.size(2))
-    # x = torch.cat([x, torch.zeros(dims).to(x).fill_(padding_idx)], 1)
+    if x.dim() == 3:
+        dims.append(x.size(2))
+    x = torch.cat([x, torch.zeros(dims).to(x).fill_(padding_idx)], 1)
 
     return x
 
@@ -81,12 +82,12 @@ def fill_tensors(
     if x.size(1) < y.size(1):
         x = expand_2d_or_3d_tensor(x, y.size(1), padding_idx)
         x[mask] = y
-    # elif x.size(1) > y.size(1):
-    #     x[mask] = torch.tensor(padding_idx).type_as(x)
-    #     if x.dim() == 2:
-    #         x[mask, : y.size(1)] = y
-    #     else:
-    #         x[mask, : y.size(1), :] = y
+    elif x.size(1) > y.size(1):
+        x[mask] = torch.tensor(padding_idx).type_as(x)
+        if x.dim() == 2:
+            x[mask, : y.size(1)] = y
+        else:
+            x[mask, : y.size(1), :] = y
     else:
         x[mask] = y
     return x
