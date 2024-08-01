@@ -59,7 +59,7 @@ def coalesce(x: Optional[Tensor], y: Tensor) -> Tensor:
     return x if x is not None else y
 
 
-@torch.jit.script
+@torch.jit.ignore
 def fill_tensors(
     x: Optional[Tensor], mask, y: Optional[Tensor], padding_idx: int
 ) -> Optional[Tensor]:
