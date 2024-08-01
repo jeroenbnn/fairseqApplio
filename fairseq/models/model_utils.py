@@ -49,9 +49,8 @@ def expand_2d_or_3d_tensor(x: Tensor, trg_dim: int, padding_idx: int):
     dims = [x.size(0), trg_dim - x.size(1)]
     if x.dim() == 3:
         dims.append(x.size(2))
-    #x = torch.cat([x, torch.zeros(dims).to(x).fill_(padding_idx)], 1)
-
-    return x
+        #x = torch.cat([x, torch.zeros(dims).to(x).fill_(padding_idx)], 1)
+        return x
 
 
 @torch.jit.script
